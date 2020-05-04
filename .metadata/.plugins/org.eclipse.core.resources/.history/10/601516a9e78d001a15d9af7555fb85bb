@@ -1,0 +1,26 @@
+<foods>
+	<food>
+		<name>English Muffin</name>
+		<price>$5.00</price>
+		<desc>English Muffin Breakfast item</desc>
+		<calories>70</calories>
+	</food>
+	<food>
+		<name>French Toast</name>
+		<price>$4.50</price>
+		<desc>Thick slices</desc>
+		<calories>600</calories>
+	</food>
+	<food>
+		<name>Homestyle breakfast</name>
+		<price>$6.95</price>
+		<desc>two eggs,bacon</desc>
+		<calories>950</calories>
+	</food>
+	<food>
+		<name>restuarent</name>
+		<price>$51.00</price>
+		<desc>bears</desc>
+		<calories>700</calories>
+	</food>
+</foods>

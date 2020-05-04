@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7d11a44a-baab-4648-83fa-f4c7e17c67dd" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="advancedwlFlow" doc:id="0be3494e-7e1f-44c2-9d4d-efda990b8114" >
+		<http:listener doc:name="Listener" doc:id="583c24ed-b4ac-4927-ba7d-76023b6a8ccc" config-ref="HTTP_Listener_config" path="/advanced"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5795a985-d1c7-4881-a1ae-21448f8155b9" message="before transform msg"/>
+		<ee:transform doc:name="Transform Message" doc:id="6e8ddc5f-ca2f-4e0d-bc62-39c8e8ad2de4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var v1= readUrl("classpath://Example/sample.xml", "application/xml")
+---
+flatten(v1.employees.*department map (dep,ind) ->
+	 (dep.employees.*employee map (emp,pos)->
+	 	({
+		
+			id: emp.@id,
+			name: emp.fullname,
+			department: dep.deptname,
+			designation: dep.designation,
+			country: dep.country
+			}
+			)
+		)
+) orderBy $.id map (emp,pos)->{
+	employeeId: emp.id,
+	fullName: emp.name
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

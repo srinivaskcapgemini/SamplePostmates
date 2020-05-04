@@ -1,0 +1,28 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  timezone:
+     description: IANA formatted timezone at this location (e.g. “America/Los_Angeles”).
+     type: string
+  display_name:
+    description: Display name of the location that should be shown to customers.
+    type: string
+  buisness_name:
+    description: Internal name of this location, such as “3rd St.” or “Store 123”
+    type: string
+  external_id:
+    description: Unique identifier for this location used externally
+    type: string
+  phone_number:
+    description:  E.164 formatted phone number for this location (e.g. +14155551234)
+    type: string
+  tax_rate:
+    description: The default tax rate to be applied to all items at this location. Will be divided by 100 to determine the percentage tax (e.g. 1250 = 12.5%). Overridden at the Catalog item level.
+    type: integer
+  default_prep_time:
+    description: An average prep time in minutes for this location, suitable for showing to users before the prep time for a specific order is available
+    type: integer
+
+
+
+

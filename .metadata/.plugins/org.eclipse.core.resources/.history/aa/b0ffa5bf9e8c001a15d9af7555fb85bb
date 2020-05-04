@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="772f856e-bb9d-4299-b65b-f0dcab01a52e" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="choicerouteFlow" doc:id="5eae7867-d57a-4d64-a932-2ac7df4b0247" >
+		<http:listener doc:name="Listener" doc:id="2cc9ea91-6a55-44e6-86bb-b91fa6630e1f" config-ref="HTTP_Listener_config" path="/choice"/>
+		<choice doc:name="Choice" doc:id="677d6e6b-c7ea-4012-a9fc-bddfa659e65a" >
+			<when expression='#[attributes.queryParams.colour=="pink"]'>
+				<ee:transform doc:name="Transform Message" doc:id="b3c418b5-1167-45d1-9e4c-2ff6957a84d2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"colour": "this is pink colour"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<when expression='#[attributes.queryParams.colour=="green"]'>
+				<ee:transform doc:name="Transform Message" doc:id="c45ef626-21aa-445a-a1f2-f3b95351524f" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"colour": "this is green colour"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="072d4319-85ec-4b91-b0ee-8b6917d584f2" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+{
+	"colour" : "neither pink nor green"
+}]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+	<flow name="choicerouteFlow1" doc:id="27f4c47d-f74c-433f-8bb5-0e896eaebe4a" >
+		<http:listener doc:name="Listener" doc:id="27dcd1c6-9192-4ca9-814c-1065d628d7c3" config-ref="HTTP_Listener_config" path="/aggr" outputMimeType="application/json"/>
+		<foreach doc:name="For Each" doc:id="a57cc115-175c-4763-871e-9b6adf8668db" collection="#[payload.CustomerRequest.*Customer]">
+			<logger level="INFO" doc:name="Logger" doc:id="cf5ef902-3d24-459b-abc8-5d2da3da96bc" message="#[payload]"/>
+		</foreach>
+		<logger level="INFO" doc:name="Logger" doc:id="26bfbff2-3bad-4f13-bc6e-91104eeb38d2" message="#[payload]"/>
+	</flow>
+</mule>

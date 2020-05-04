@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="0acbac3b-09ff-4fcc-ad84-abe4fb324f36" >
+		<http:listener-connection host="localhost" port="${http.port}" />
+	</http:listener-config>
+	<configuration-properties doc:name="Configuration properties" doc:id="4a88efc2-d0be-459c-8324-08bae2b2d88f" file="dev.yaml" />
+	<flow name="securing_propertiesfileFlow" doc:id="c8a8daaf-a36b-41a4-9b2d-e7f4e3bb7c97" >
+		<http:listener doc:name="Listener" doc:id="466ac545-77c2-4db6-8430-5076c34542fe" path="${http.path}" config-ref="HTTP_Listener_config"/>
+		<ee:transform doc:name="Transform Message" doc:id="04983ab7-187e-4ac2-bce6-d22fdd9f37bd" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+
+	"encrypted successfully...."
+]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+</mule>

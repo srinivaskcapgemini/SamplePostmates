@@ -1,0 +1,78 @@
+#%RAML 1.0 Library
+types:
+  
+  OrderSummary:
+      properties:
+        identifier? :
+          type: string
+          description: Identifier of order
+        customerId?:
+          type: string
+          description: Identifier of customer
+        billingAddress?:
+          type: string
+          description:  billing address
+        shippingAddress?:
+          type: string
+          description: ddress for shipping of products
+        orderItems?:
+          type: string
+          description: |
+            Lists of ordered products
+        trackingNumber?:
+          type: string
+          description: |
+            Order tracking number
+        status?:
+          type: string
+          description: |
+            Status of order
+        subtotal?:
+          type: string
+          description: |
+            Price for order 
+  OrderResponse:
+      properties:
+        identifier? :
+          type: string
+          description: |
+            Identifier of order
+        customerId?:
+          type: string
+          description: |
+            Identifier of customer
+        billingAddress?:
+          type: string
+          description: |
+            Full billing address
+        shippingAddress?:
+          type: string
+          description: |
+            Full address for shipping of products
+        orderItems?:
+          type: string
+          description: |
+            Lists of ordered products
+        trackingNumber?:
+          type: string
+          description: |
+            Order tracking number
+        status?:
+          type: string
+          description: |
+            Status of order
+        subtotal?:
+          type: string
+          description: |
+            Price for order 
+        taxPrice?:
+          type: string
+          description: Product tax
+        shippingPrice?:
+          type: string
+          description: Product shipping price
+        total?:
+          type: string
+          description: |
+            Total price for order 
+ 

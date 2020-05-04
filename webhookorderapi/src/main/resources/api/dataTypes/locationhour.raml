@@ -1,0 +1,16 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  regular_hours:
+    description: List of regular operating hours for the location
+    type: array
+    items: !include locationhourlist.raml
+  
+  special_hours:
+    description: List of special/holiday operating hours for the location
+    type: array
+    items: !include locationhourlist.raml
+
+  open_24_hours:
+    description: Defaults to false. Determines whether a location is open 24/7. If true, regular_hours is ignored.
+    type: boolean

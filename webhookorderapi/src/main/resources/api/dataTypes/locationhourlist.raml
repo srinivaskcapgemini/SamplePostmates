@@ -1,0 +1,18 @@
+#%RAML 1.0 DataType
+ type: object
+ properties:
+    day_of_week:
+      description: Day of the week. A number from 1-7 starting with Monday.
+      type: Integer
+    date:
+      description: Only used when defining special_hours
+      type: Date
+    is_closed:
+      description: Defaults to false. Determines whether a location is closed on the                      provided date. Only used when defining special_hours.
+      type: boolean
+    start_time:
+      description: A time in the location’s timezone in 24-hour format (e.g. “09:00”)                       to indicate when the location opens for business.
+      type: string
+    end_time:
+      description: A time in the location’s timezone in 24-hour format (e.g. “17:00”)                     to indicate when the location closes for business. 
+      type: string     

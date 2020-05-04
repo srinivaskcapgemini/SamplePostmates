@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="61438958-0606-42ad-9e49-cfb667c55e68" >
+		<http:listener-connection protocol="HTTPS" host="0.0.0.0" port="8082" >
+			<tls:context >
+				<tls:trust-store path="server-truststore.jks" password="mulesoft" type="jks" />
+				<tls:key-store type="jks" path="server-keystore.jks" keyPassword="mulesoft" password="mulesoft" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<http:listener-config name="HTTP_Listener_config1" doc:name="HTTP Listener config" doc:id="e14e039a-dba0-46ac-8970-b83f2aa6ab7a" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="579f062d-2260-408c-8b90-9fb801df5d14" >
+		<http:request-connection protocol="HTTPS" host="localhost" port="8082" />
+	</http:request-config>
+	<flow name="twoway_sslFlow" doc:id="1dc38f62-7a07-495f-93c0-0b6c6b508d02" >
+		<http:listener doc:name="Listener" doc:id="4518d430-9f8a-42cc-9036-4f5735610b0f" config-ref="HTTP_Listener_config" path="/test"/>
+		<set-payload value="tested success two way ssl" doc:name="Set Payload" doc:id="00a8f02f-ced6-44c5-b42a-48adef39c164" />
+	</flow>
+	<flow name="twoway_sslFlow1" doc:id="a5628657-93ac-4cff-b099-9e67c7acd234" >
+		<http:listener doc:name="Listener" doc:id="15b0f43c-26df-4c5a-94c4-de15a727d740" config-ref="HTTP_Listener_config1" path="/test1"/>
+		<http:request method="GET" doc:name="Request" doc:id="a5c14903-4bd5-4d68-afa9-1f486a1ba331" config-ref="HTTP_Request_configuration" path="/test"/>
+	</flow>
+</mule>

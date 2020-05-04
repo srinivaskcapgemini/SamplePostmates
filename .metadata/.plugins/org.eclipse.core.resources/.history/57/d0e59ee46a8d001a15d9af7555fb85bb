@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:file="http://www.mulesoft.org/schema/mule/file" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/file http://www.mulesoft.org/schema/mule/file/current/mule-file.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="7d11a44a-baab-4648-83fa-f4c7e17c67dd" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<file:config name="File_Config" doc:name="File Config" doc:id="73100db1-4d5a-4417-8e68-1cd80e8aeb03" >
+		<file:connection workingDir="F:\training_4.2\advancedwl\src\main\resources\Example" />
+	</file:config>
+	<flow name="advancedwlFlow" doc:id="0be3494e-7e1f-44c2-9d4d-efda990b8114" >
+		<http:listener doc:name="Listener" doc:id="583c24ed-b4ac-4927-ba7d-76023b6a8ccc" config-ref="HTTP_Listener_config" path="/advanced"/>
+		<logger level="INFO" doc:name="Logger" doc:id="5795a985-d1c7-4881-a1ae-21448f8155b9" message="before transform msg"/>
+		<ee:transform doc:name="Transform Message" doc:id="6e8ddc5f-ca2f-4e0d-bc62-39c8e8ad2de4" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var v1= readUrl("classpath://Example/sample.xml", "application/xml")
+---
+flatten(v1.employees.*department map (dep,ind) ->
+	 (dep.employees.*employee map (emp,pos)->
+	 	({
+		
+			id: emp.@id,
+			name: emp.fullname,
+			department: dep.deptname,
+			designation: dep.designation,
+			country: dep.country
+			}
+			)
+		)
+) orderBy $.id map (emp,pos)->{
+	employeeId: emp.id,
+	fullName: emp.name
+	
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+	</flow>
+	<flow name="CryptoExampleFlow" doc:id="2b75d6d6-ffba-4ca9-895b-f109b698a628" >
+		<http:listener doc:name="Listener" doc:id="8f50a769-8c5b-4027-ad37-9013df8c6254" config-ref="HTTP_Listener_config" path="/crypto"/>
+		<ee:transform doc:name="Transform Message" doc:id="9dffff9a-db52-4706-8bcb-88e060fd40f1" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+import dw::Crypto
+output application/json
+---
+{
+	 "HmacBinary": Crypto::HMACBinary("fghjklmnb" as Binary,"This is example" as Binary	),
+		"HmacWith256": Crypto::HMACWith("fghjklmnb" as Binary,"This is example" as Binary,"HmacSHA256"	),
+		"HmacWith512": Crypto::HMACWith("fghjklmnb" as Binary,"This is example" as Binary,"HmacSHA512"	),
+	 MD5: Crypto::MD5("This is example" as Binary),
+	 Sha1: Crypto::SHA1("This is example" as Binary),
+	HashWithMD2: Crypto::hashWith("This is example", "MD2"),
+	HashWithMD5: Crypto::hashWith("This is example", "MD5"),
+	HashWithSHA1: Crypto::hashWith("This is example", "SHA-1"),
+	HashWithSHA256: Crypto::hashWith("This is example", "SHA-256"),
+	HashWithSHA384: Crypto::hashWith("This is example", "SHA-384"),
+	HashWithSHA512: Crypto::hashWith("This is example", "SHA-512")
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="ec7b38d3-16d3-49a1-a1ed-25b1093cc637" message="before"/>
+		<file:write doc:id="05bcef47-8543-4165-8215-886806f7a7ad" path="\samples" config-ref="File_Config"/>
+		<logger level="INFO" doc:name="Logger" doc:id="c79c36db-2e8f-4067-836c-507e18deab80" message="after"/>
+	</flow>
+</mule>

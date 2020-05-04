@@ -1,0 +1,330 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mule xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:apikit="http://www.mulesoft.org/schema/mule/mule-apikit" xmlns:http="http://www.mulesoft.org/schema/mule/http" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd http://www.mulesoft.org/schema/mule/mule-apikit http://www.mulesoft.org/schema/mule/mule-apikit/current/mule-apikit.xsd ">
+    <http:listener-config name="tgif-postmates-orderapi-httpListenerConfig">
+        <http:listener-connection host="0.0.0.0" port="8081" />
+    </http:listener-config>
+    <apikit:config name="tgif-postmates-orderapi-config" api="tgif-postmates-orderapi.raml" outboundHeadersMapName="outboundHeaders" httpStatusVarName="httpStatus" />
+    <flow name="tgif-postmates-orderapi-main">
+        <http:listener config-ref="tgif-postmates-orderapi-httpListenerConfig" path="/api/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:router config-ref="tgif-postmates-orderapi-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:BAD_REQUEST">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Bad request"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">400</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:METHOD_NOT_ALLOWED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Method not allowed"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">405</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_ACCEPTABLE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not acceptable"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">406</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:UNSUPPORTED_MEDIA_TYPE">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Unsupported media type"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">415</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+            <on-error-propagate type="APIKIT:NOT_IMPLEMENTED">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Not Implemented"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">501</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="tgif-postmates-orderapi-console">
+        <http:listener config-ref="tgif-postmates-orderapi-httpListenerConfig" path="/console/*">
+            <http:response statusCode="#[vars.httpStatus default 200]">
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:response>
+            <http:error-response statusCode="#[vars.httpStatus default 500]">
+                <http:body>#[payload]</http:body>
+                <http:headers>#[vars.outboundHeaders default {}]</http:headers>
+            </http:error-response>
+        </http:listener>
+        <apikit:console config-ref="tgif-postmates-orderapi-config" />
+        <error-handler>
+            <on-error-propagate type="APIKIT:NOT_FOUND">
+                <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+                    <ee:message>
+                        <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{message: "Resource not found"}]]></ee:set-payload>
+                    </ee:message>
+                    <ee:variables>
+                        <ee:set-variable variableName="httpStatus">404</ee:set-variable>
+                    </ee:variables>
+                </ee:transform>
+            </on-error-propagate>
+        </error-handler>
+    </flow>
+    <flow name="get:\getallorders:tgif-postmates-orderapi-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  " kind ": "order",
+  " status ": "created",
+  " order_id ": "ord_Xfsdjkfldsf",
+  " external_order_id ": "xxxxxx123",
+  " delivery_id ": "del_3vDjjkd21b",
+  " place_details ": {
+    " place_id ": "plc_uAJs7l1rREGmJnZFH_6RZA",
+    " external_place_id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+    " timezone ": "America/New_York"
+  },
+  " pickup_details ": {
+    " display_name ": "FirstName LastInitial",
+    " order_number ": 555,
+    " pickup_time ": null
+  },
+  " subtotal ": 10,
+  " tax ": 0.85,
+  " items ": [
+    {
+      " id ": "oi_DFSIFSAMfkjdfo",
+      " external_id ": "46d229a9-0d95-4e4c-a135-dc068dbd29f3",
+      " name ": "Mongolian",
+      " category_name ": "Rice Bowls",
+      " base_price ": 0,
+      " quantity ": 1,
+      " modifer_lists ": [
+        {
+          " name ": "Protein Option",
+          " modifiers ": [
+            {
+              " id ": "oim_HmbHOgQuQia3kSh3bUBvw",
+              " external_id ": "57841aab-6861-421d-b593-a8852bf32627",
+              " price ": 8.99,
+              " name ": "Chicken"
+            }
+          ]
+        }, 
+        {
+          " name ": "Rice Option",
+          " modifiers ": [
+            {
+              " id ": "oim_HmbHOgQuQia3kSh3bUBvw",
+              " external_id ": "57841aab-6861-421d-b593-a8852bf32627",
+              " price ": 0,
+              " name ": "White Rice"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  errors: "null"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\PMOrderWebHook\receiveorder:tgif-postmates-orderapi-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  " kind ": "event.order_created",
+  " id ": "xxxxxx123",
+  " created ": "2018-08-26T10:04:03Z",
+  " data ": {
+    " kind ": "order",
+    " status ": "created",
+    " order_id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+    " external_order_id ": null,
+    place_details: {
+      " place_id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+      " external_place_id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+      " timezone ": "America/New_York"
+    },
+    pickup_details: {
+      " display_name ": "FirstName LastInitial",
+      " order_number ": 555,
+      " estimated_ready_time ": "10 min "
+    },
+    " subtotal ": 10.00,
+    " tax ": 0.85,
+    " items ": [
+      {
+        " id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+        " external_ id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+        " name ": "Mongolian",
+        " category_name ": " Rice Bowls",
+        " base_price ": 0.00,
+        " quantity ": 1,
+        " modifier_lists ": []
+      }
+    ],
+    " errors ": " error"
+  },
+  " order_id ": "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+  " status ": "created"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\updateorder\receiveorderupdates:tgif-postmates-orderapi-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  kind: "event.order_updated",
+  id: "evt_iDPBFypsRCaY8ZfCbDhLYQ",
+  created: "2018-08-26T10:04:03Z",
+  data: {
+    kind: "order",
+    status: "submitted",
+    order_id: "ord_Xfsdjkfldsf",
+    external_order_id: null,
+    delivery_id: "del_3vDjjkd21b",
+    place_details: {
+      place_id: "plc_uAJs7l1rREGmJnZFH_6RZA",
+      external_place_id: "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+      timezone: "America/New_York"
+    },
+    pickup_details: {
+      display_name: "FirstName LastInitial",
+      order_number: 555,
+      pickup_time: null
+    },
+    subtotal: 10.00,
+    tax: 0.85,
+    items: [
+      {
+        id: "oi_DFSIFSAMfkjdfo",
+        external_id: "14d4d332-919b-46a3-b18f-48c2c0a1e816",
+        name: "Mongolian",
+        category_name: "Rice Bowls",
+        base_price: 0.00,
+        quantity: 1,
+        modifier_lists: []
+      }
+    ],
+    errors: null
+  },
+  order_id: "ord_Xfsdjkfldsf",
+  status: "created"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="get:\developer_id\locations\(external_id):tgif-postmates-orderapi-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core">
+            <ee:variables>
+                <ee:set-variable variableName="external_id">attributes.uriParams.'external_id'</ee:set-variable>
+            </ee:variables>
+        </ee:transform>
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  locations: [
+    {
+      id: "loc_zUsxs6TFSMGwWRG9zDkCIg",
+      account_id: "act_123456789",
+      external_id: "17025",
+      href: "/developers/dev_LfMC8FFFQXqrIQ7kt7tsqA/account/act_kBU5W1m9T5-pG8S18I4Aiw/locations/loc_zUsxs6TFSMGwWRG9zDkCIg"
+    }
+  ]
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\updateorder:application\json:tgif-postmates-orderapi-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  message: "Order was updated"
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+    <flow name="post:\PMOrderWebHook:application\json:tgif-postmates-orderapi-config">
+        <ee:transform xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+            <ee:message>
+                <ee:set-payload><![CDATA[%dw 2.0
+output application/json
+---
+{
+  "Order created Successfully": null
+}]]></ee:set-payload>
+            </ee:message>
+        </ee:transform>
+    </flow>
+</mule>

@@ -1,0 +1,36 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  kind : string
+  status : 
+    enum : [created,submitted,failed]
+  order_id : 
+    description: Postmates unique ID of this order. This ID should be used as an            idempotency key.
+    type: string
+  external_order_id?: 
+    description:  The provider’s (TGIF) unique ID of this order, not null in case of 
+      order_status is 'submitted'
+    type: string | nil
+  place_details :
+    type : object
+    properties:
+      place_id : string
+      external_place_id : string
+      timezone?: string
+  pickup_details:
+    type: object 
+    properties:
+      customer_name : string
+      estimated_ready_time? : string
+      order_number : integer
+  subtotal :
+    type: number
+  tax :
+    type: number
+  items :
+    description: A List of OrderItems associated with this order
+    type: array
+    items: !include  order-data-item-request.raml
+  error?:
+    description: Error if any
+    type: string

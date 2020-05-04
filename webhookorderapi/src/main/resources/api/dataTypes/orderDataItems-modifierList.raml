@@ -1,0 +1,35 @@
+#%RAML 1.0 DataType
+type : object
+properties:
+  id : 
+    description: The CatalogModifier ID of this modifier
+    type: string
+  external_id :
+    description: The ID of the CatalogModifier used by the external system
+    type: string
+  price :
+    description: The price of this modifier
+    type: string
+    pattern: ^[+|-]?\d*\.\d{2}$ 
+  name :
+    description: The name of this modifier
+    type: string
+  modifier_lists :
+    description: A List of CatalogModifierLists applied to this item if nested options     were applied
+    type: object
+    properties:
+      id : 
+        description: The CatalogModifier ID of this modifier
+        type: string
+      external_id :
+        description: The ID of the CatalogModifier used by the external system
+        type: string
+      price :
+        description: The price of this modifier
+        type: string
+        pattern: ^[+|-]?\d*\.\d{2}$ 
+      name :
+        description: The name of this modifier
+        type: string
+      
+        

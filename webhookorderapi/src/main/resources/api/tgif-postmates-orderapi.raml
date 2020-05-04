@@ -1,0 +1,150 @@
+#%RAML 1.0
+baseUri: https://anypoint.mulesoft.com/mocking/api/v1/links/f1ce013a-0e05-4d58-898f-b21ad299e37e/ # 
+title: api-tgifridays-offpremise-dev
+version: 1.0.0
+mediaType: application/json
+uses:
+  orders:  /dataTypes/OrderDatatype.raml
+types:
+  orderRequest : !include dataTypes/order-request.raml
+  OrderSummary : orders.OrderSummary
+  OrderResponse : orders.OrderResponse
+
+/PMOrderWebHook:
+  /createorder:
+  displayName: Order Created 
+  post:
+    description: Order Created
+    body:
+      application/json:
+        type: orderRequest
+        example:
+          !include examples/orderCreatedExample.json
+    responses:
+      200:
+        description: Success Response
+        body:
+          application/json:
+            example:
+              {
+                "Order created Successfully"
+              }
+  /receiveorder:
+      get:
+        displayName: Receiving the  order  
+        description:  get the order id 
+        responses:
+          200:
+            body:
+              application/json:
+                type: OrderResponse
+                examples: 
+                  Responses: !include examples/receiveorder_response.raml
+                  
+          401:
+            body:
+              application/json:
+                example: |
+                  {
+                    "message": "Order not found"
+                  }
+/updateorder:
+  post:
+    displayName: Update Order
+    body:
+        application/json:
+          type: OrderResponse
+          example: !include examples/updateorderbody_request.raml
+                 
+    responses:
+        200:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Order was updated"
+                }
+        400:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Order not updated"
+                }
+        401:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "Order not found"
+                }
+  /receiveorderupdates:
+     get:
+        displayName: Receiving the  order  updates 
+        
+        responses:
+          200:
+            body:
+              application/json:
+                examples: 
+                  Responses: !include examples/receiveorderupdate_response.raml
+          400:
+            body:
+              application/json:
+               example: |
+                {
+                  "message": "cancelled order updated"
+                }        
+          
+                  
+/getallorders:
+  get: 
+    displayName: getting all the orders list
+    responses:
+      200:
+        body:
+              application/json:
+                
+                examples: 
+                  Responses: !include examples/getallorders_response.raml
+      400:
+          body:
+            application/json:
+              example: |
+                {
+                  "message": "item_unavailable"
+                }
+      401:
+          body:
+            application/json:
+              example: |
+                  {
+                    "message": "submit_order_failure"
+                  } 
+      500:
+        body:
+          application/json:
+            example:
+              {
+                "message" : "merchant_closed"
+              }
+                         
+          
+            
+
+       
+
+
+
+/developers/:
+/developer_id/locations:
+
+  /{external_id}:
+    get:
+      responses:
+        200:
+          description: success response
+          body:
+            example: !include examples/locationSearchLocation.json
+    
+/developers/{developer_id}:

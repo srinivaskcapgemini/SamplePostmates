@@ -1,0 +1,21 @@
+#%RAML 1.0 DataType
+type : object
+properties:
+  kind : 
+    description: All orders will share the value of `order' i.e. event.order_created,           event.order_submitted,event.order_failed
+    type: string
+  id : 
+    description: Unique ID of this event 
+    type: string
+  created : 
+    description: Date and time that this event was created
+    type: datetime
+  order_id : 
+    description: Unique ID of this order
+    type: string
+  status : 
+    description: Order Status Type
+    enum : [created,submitted,failed]
+  data :
+    description: Object containing all of the data for this order
+    type : !include order-data-request.raml

@@ -1,0 +1,13 @@
+{
+  "HmacBinary": "U\ufffd\ufffdaLM\ufffd\ufffd`\ufffd\ufffd\ufffd\ufffd\ufffd\u0001\ufffd\ufffd\u0019\ufffd\u0018",
+  "HmacWith256": "c279e6c8e1202b26f5edfd1ba0cca7c8f618444d9e88943aeb811786357f210a",
+  "HmacWith512": "8fb450e545fd52456612ee62ee6432705a352c83aff90c230fa65b8eaf428b1d759f50c0fcfb60dc0e82a9dd78a40984f130c9770f9a9a8505d2cbdd30e81526",
+  "MD5": "f2ebe12e9d81274ba2854d0429d11d5c",
+  "Sha1": "a6160bb15f07278b3690be8e20ed3f1629971641",
+  "HashWithMD2": "4ǂ\ufffd\ufffd\ufffdΟW9\ufffd\ufffd\\\ufffdI3",
+  "HashWithMD5": "\ufffd\ufffd\ufffd.\ufffd\ufffd'K\ufffd\ufffdM\u0004)\ufffd\u001d\\",
+  "HashWithSHA1": "\ufffd\u0016\u000b\ufffd_\u0007'\ufffd6\ufffd\ufffd\ufffd \ufffd?\u0016)\ufffd\u0016A",
+  "HashWithSHA256": "u\u001a\u0016\ufffd\ufffd\"d\u00030\ufffdX\ufffd*ʐo_\ufffdsJ;}\ufffdfn\u0001\u0010ɡ\ufffd\ufffd\ufffd",
+  "HashWithSHA384": "\u001a=m\ufffd\ufffd\ufffd\ufffd~\ufffdr\n\ufffdU\r}\u0006\t@ۍ\ufffd\ufffd\u0007\ufffdc\ufffd\u0019\ufffd\ufffd\ufffd81~DQB\ufffd\ufffd8\ufffd\ufffd\ufffd'\ufffd1",
+  "HashWithSHA512": "P<\u0007\ufffdɆ\u0006\ufffd|\ufffd\u0001\ufffdɸv\ufffdz\ufffd!\ufffd[\ufffdΝe\u001cy\u001c\u0006jhג\ufffd=|\u0002\ufffd\ufffdC<\ufffd\ufffd\ufffdĄJ\ufffd\ufffd\ufffd\ufffdb\ufffd\fig\ufffd\ufffd\ufffd\ufffd\u0016\ufffd\ufffd"
+}

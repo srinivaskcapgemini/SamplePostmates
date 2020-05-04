@@ -1,0 +1,62 @@
+#%RAML 1.0 DataType
+type: object
+properties:
+  display_name:
+    description: Display name of the location that should be shown to customers
+    type: string
+
+  business_name:
+    description: Internal name of this location.
+    type: string
+
+  location_id:
+    description: Unique identifier for this location assigned by Postmates
+    type: string
+
+  external_id:
+    description: Unique identifier for this location used externally
+    type: string
+
+  address:
+    description: Object containing the address of the location
+    type: array
+    items: !include location-address.raml
+  
+  phone_number:
+    description: E.164 formatted phone number for this location
+    type: string
+
+  coordinate:
+    description: Object containing the latitude and longitude of the location
+    type: array
+    items: !include location-geocode.raml
+
+  active:
+    description: Determines the visibility of the location in the Postmates marketplace
+    type: boolean
+  
+  url:
+    description: The URL of the location in the Postmates marketplace
+    type: string
+
+  pickup_notes:
+    description: Instructions for how to pick up orders from the location
+    type: string
+
+  tax_rate:
+    description: The default tax rate to be applied to all items at this location.
+    type: integer
+  
+  default_prep_time:
+    description: An average prep time in minutes for this location, suitable for                         showing to users before the prep time for a specific order is available
+    type: string
+
+
+
+
+
+
+
+
+
+  #%RAML 1.0 DataType

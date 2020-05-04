@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:tls="http://www.mulesoft.org/schema/mule/tls" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/tls http://www.mulesoft.org/schema/mule/tls/current/mule-tls.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="05f70ac1-c540-4714-bc64-24773288d847" >
+		<http:listener-connection host="0.0.0.0" port="8088">
+			<tls:context >
+				<tls:key-store type="jks" path="server-keystore.jks" keyPassword="srinivas" password="srinivas" />
+			</tls:context>
+		</http:listener-connection>
+	</http:listener-config>
+	<http:request-config name="HTTP_Request_configuration" doc:name="HTTP Request configuration" doc:id="ef0e8163-50db-4b45-add3-0c6ad8bc71d5" >
+		<http:request-connection protocol="HTTPS" host="localhost" port="8087" >
+			<tls:context >
+				<tls:trust-store path="client-truststore.jks" password="srinivas" type="jks" />
+			</tls:context>
+		</http:request-connection>
+	</http:request-config>
+	<flow name="oneway-sslFlow" doc:id="3eec21f8-92de-44a8-b5f1-f1ef967aacbf" >
+		<http:listener doc:name="Listener" doc:id="5e0a145d-200f-4cb1-8eee-f6b5fa14a290" config-ref="HTTP_Listener_config" path="/oneway"/>
+		<set-payload value="tested successfully....." doc:name="Set Payload" doc:id="93a651a5-77d3-4a96-851a-645413b0be3c" />
+	</flow>
+	<flow name="oneway-sslFlow1" doc:id="790e7819-1cbf-424a-96c4-39bd67c422ed" >
+		<http:listener doc:name="Listener" doc:id="6bf85e66-35fa-4548-80cf-1b8b64c8b1c4" config-ref="HTTP_Listener_config" path="/test"/>
+		<http:request method="GET" doc:name="Request" doc:id="fa9d5c29-10b9-4a17-b6a9-c8296cd6fac6" config-ref="HTTP_Request_configuration" path="/oneway"/>
+	</flow>
+</mule>

@@ -1,0 +1,68 @@
+<employees>
+	<department>
+		<deptname>Cricket</deptname>
+		<designation>player</designation>
+		<country>India</country>
+		<employees>
+			<employee id="11">
+			<fullname>ganguly</fullname>
+			</employee>
+			<employee id="33">
+			<fullname>kohli</fullname>
+			</employee>
+			<employee id="22">
+			<fullname>sehwag</fullname>
+			</employee>
+		</employees>
+	</department>
+		
+    <department>
+		<deptname>Cricket</deptname>
+		<designation>player</designation>
+		<country>westIndia</country>
+		<employees>
+			<employee id="12">
+			<fullname>gale</fullname>
+			</employee>
+			<employee id="23">
+			<fullname>lara</fullname>
+			</employee>
+			<employee id="56">
+			<fullname>bravo</fullname>
+			</employee>
+		</employees>
+	</department>
+	
+	<department>
+		<deptname>Cricket</deptname>
+		<designation>player</designation>
+		<country>southafrica</country>
+		<employees>
+			<employee id="13">
+			<fullname>devilers</fullname>
+			</employee>
+			<employee id="34">
+			<fullname>nigidi</fullname>
+			</employee>
+			<employee id="24">
+			<fullname>ramada</fullname>
+			</employee>
+		</employees>
+	</department>
+	
+	<department>
+		<deptname>Cricket</deptname>
+		<designation>player</designation>
+		<country>pak</country>
+		<employees>
+			<employee id="15">
+			<fullname>azam</fullname>
+			</employee>
+			<employee id="36">
+			<fullname>misba</fullname>
+			</employee>
+			<employee id="26">
+			<fullname>hafeez</fullname>
+			</employee>
+		</employees>
+	</department>
